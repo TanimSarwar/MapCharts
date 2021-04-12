@@ -1,0 +1,357 @@
+﻿
+@{
+	ViewBag.Title = "map";
+}
+
+<!-- Styles -->
+<style>
+	#chartdiv {
+		width: 100%;
+		height: 500px;
+		overflow: hidden;
+	}
+</style>
+
+<!-- Resources -->
+
+<script src="~/amcharts/core.js"></script>
+<script src="~/amcharts/maps.js"></script>
+<script src="~/amcharts/bangladeshLow.js"></script>
+<script src="~/amcharts/animated.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/kelly.js"></script>
+
+
+<!-- Chart code -->
+<script>
+	am4core.ready(function () {
+
+		// Themes begin
+		am4core.useTheme(am4themes_kelly);
+		am4core.useTheme(am4themes_animated);
+		// Themes end
+
+		// Create map instance
+		var chart = am4core.create("chartdiv", am4maps.MapChart);
+
+		// Set map definition
+		chart.geodata = am4geodata_bangladeshLow;
+
+		// Set projection
+		chart.projection = new am4maps.projections.Miller();
+
+		// Create map polygon series
+		var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+
+		// Exclude Antartica
+		polygonSeries.exclude = ["AQ"];
+
+		// Make map load polygon (like country names) data from GeoJSON
+		polygonSeries.useGeodata = true;
+
+		// Configure series
+		var polygonTemplate = polygonSeries.mapPolygons.template;
+		polygonTemplate.tooltipText = "{name}";
+		polygonTemplate.polygon.fillOpacity = 0.6;
+
+
+		// Create hover state and set alternative fill color
+		var hs = polygonTemplate.states.create("hover");
+		hs.properties.fill = chart.colors.getIndex(0);
+
+		// Add image series
+		var imageSeries = chart.series.push(new am4maps.MapImageSeries());
+		imageSeries.mapImages.template.propertyFields.longitude = "longitude";
+		imageSeries.mapImages.template.propertyFields.latitude = "latitude";
+		imageSeries.mapImages.template.tooltipText = "{title}";
+		imageSeries.mapImages.template.propertyFields.url = "url";
+
+		var circle = imageSeries.mapImages.template.createChild(am4core.Circle);
+		circle.radius = 2;
+		circle.propertyFields.fill = "color";
+
+		var circle2 = imageSeries.mapImages.template.createChild(am4core.Circle);
+		circle2.radius = 3;
+		circle2.propertyFields.fill = "color";
+
+
+		circle2.events.on("inited", function (event) {
+			animateBullet(event.target);
+		})
+
+
+		function animateBullet(circle) {
+			var animation = circle.animate([{ property: "scale", from: 1, to: 5 }, { property: "opacity", from: 1, to: 0 }], 6000, am4core.ease.circleOut);
+			animation.events.on("animationended", function (event) {
+				animateBullet(event.target.object);
+			})
+		}
+
+		var colorSet = new am4core.ColorSet();
+
+		imageSeries.data = [
+			{
+				"title": "R990-Fulbaria",
+				"latitude": 24.6250,
+				"longitude": 90.2667,
+				"color": colorSet.next()
+			},
+			{
+				"title": "R001-Uttara 2",
+				"latitude": 23.873751,
+				"longitude": 90.396454,
+				"color": colorSet.next()
+			},
+
+
+			{
+				"title": "R003-Elephant Road-1",
+				"latitude": 23.739,
+				"longitude": 90.3873,
+				"color": colorSet.next()
+			},
+				
+	
+	
+	
+	
+	
+	
+	
+	
+			{
+				"title": "R007-Noya Sarak Sylhet-2",
+				"latitude": 24.903982,
+				"longitude": 91.880633,
+				"color": colorSet.next()
+			},
+	
+	
+
+			{
+				"title": "R059-Joypurhat",
+				"latitude": 25.0079,
+				"longitude": 89.0225,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R069-Syedpur",
+				"latitude": 24.7563,
+				"longitude": 91.5911,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R070-Sherpur",
+				"latitude": 24.6658,
+				"longitude": 89.4789,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R032-Pabna 1",
+				"latitude": 24.0078,
+				"longitude": 89.2291,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R006-Sylhet 1",
+				"latitude": 24.8956,
+				"longitude": 91.8691,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R005-Chittagong 1 Lalkhan Bazar",
+				"latitude": 22.3474,
+				"longitude": 91.8192,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R004-Khulna 1",
+				"latitude": 22.8222,
+				"longitude": 89.5529,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R052-Chittagong 2 GEC",
+				"latitude": 22.3582,
+				"longitude": 91.8232,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R110-Tongi 2",
+				"latitude": 23.8856728900331,
+				"longitude": 90.4003770693093,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R011-Basundhara City",
+				"latitude": 23.7507,
+				"longitude": 90.39,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R015-Biponi Bitan, Chittagong 2",
+				"latitude": 22.3343,
+				"longitude": 91.8326,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R019-Dorgah Gate, Sylhet 3",
+				"latitude": 24.4827,
+				"longitude": 91.7674,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R020-Court Point, Sylhet 4",
+				"latitude": 24.8905,
+				"longitude": 91.8681,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R033-NarayanGanj",
+				"latitude": 23.2321,
+				"longitude": 90.6631,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R021-Satmatha Mor, Bogra 2",
+				"latitude": 24.848,
+				"longitude": 89.3729,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R022-Andorkilla, Chittagong 3",
+				"latitude": 22.3402,
+				"longitude": 91.8377,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R023-Chawk Bazar, Chittagong 4",
+				"latitude": 22.3571,
+				"longitude": 91.8372,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R024-Sholoshohor, Chittagong 5",
+				"latitude": 22.3678,
+				"longitude": 91.8264,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R027-Comilla Kandirpar",
+				"latitude": 23.4608,
+				"longitude": 91.1816,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R048-Shewrapara Dhaka",
+				"latitude": 23.7911,
+				"longitude": 90.3737,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R056-Sadar Road, Barishal 1",
+				"latitude": 22.7,
+				"longitude": 90.3667,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R042-Coxs' Bazar 2",
+				"latitude": 21.4395,
+				"longitude": 92.0077,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R043-Bhoirab",
+				"latitude": 24.3461,
+				"longitude": 90.7555,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R079-Maijdee",
+				"latitude": 22.8824,
+				"longitude": 91.0971,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R080-Konabari",
+				"latitude": 24.5702,
+				"longitude": 89.9354,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R093-Nilphamari 1",
+				"latitude": 26.0701,
+				"longitude": 88.8331,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R097-Subhanighat",
+				"latitude": 24.8935,
+				"longitude": 91.8813,
+				"color": colorSet.next()
+			},
+
+			{
+				"title": "R102-Bandartila Chittagong",
+				"latitude": 22.3948,
+				"longitude": 91.8365,
+				"color": colorSet.next()
+			},
+
+
+			{
+				"title": "R114-Uttara 3",
+				"latitude": 23.8575,
+				"longitude": 90.4036,
+				"color": colorSet.next()
+			}
+		];
+
+
+
+	}); // end am4core.ready()
+</script>
+
+
+
+<!-- HTML -->
+<div id="chartdiv"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
