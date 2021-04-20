@@ -3,41 +3,68 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data;
+using MapCharts.DAL;
+using MapCharts.Utilities;
 
-namespace MapsCharts.Controllers
+namespace MapCharts.Controllers
 {
-	public class HomeController : Controller
-	{
-		public ActionResult Index()
-		{
-			return View();
-		}
 
-		public ActionResult About()
-		{
-			ViewBag.Message = "Your application description page.";
+    public class HomeController : Controller
+    {
+        BasicUtilities utilities = new BasicUtilities();
+        mapDAL mapDAL = new mapDAL();
 
-			return View();
-		}
+        public ActionResult Index()
+        {
+            return View();
+        }
 
-		public ActionResult Contact()
-		{
-			ViewBag.Message = "Your contact page.";
+        public ActionResult About()
+        {
+            ViewBag.Message = "Your application description page.";
 
-			return View();
-		}
+            return View();
+        }
 
-		public ActionResult map()
-		{
-			ViewBag.Message = "Your contact page.";
+        public ActionResult Contact()
+        {
+            ViewBag.Message = "Your contact page.";
 
-			return View();
-		}
-		public ActionResult detmap()
-		{
-			ViewBag.Message = "Your contact page.";
+            return View();
+        }
 
-			return View();
-		}
-	}
+        public ActionResult mapPulsating()
+        {
+            return View();
+        }
+        [HttpPost]
+        public JsonResult OutletList()
+        {
+            try
+            {
+                string _Msg;
+                DataTable dt_OutletList = mapDAL.GetOutletData();
+
+                if (dt_OutletList.Rows.Count > 0)
+                {
+                    _Msg = "DONE";
+                    List<Dictionary<string, object>> _OutletList = utilities.GetTableRows(dt_OutletList);
+                    return Json(_OutletList);
+                }
+                else
+                {
+                    _Msg = "ERROR";
+                    return Json(_Msg);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+
+            }
+        }
+
+
+    }
 }
